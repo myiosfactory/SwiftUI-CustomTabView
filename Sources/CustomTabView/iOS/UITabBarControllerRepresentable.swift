@@ -26,7 +26,9 @@ struct UITabBarControllerRepresentable: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ tabBarController: UITabBarController, context: Context) {
+        UIView.setAnimationsEnabled(false)
         tabBarController.selectedIndex = selectedTabIndex
+        UIView.setAnimationsEnabled(true)
     }
 }
 
