@@ -266,6 +266,8 @@ private struct _LayoutView<TabBarView: View, SelectionValue: Hashable>: View {
             
             if !isTabBarHidden {
                 tabBarView
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .animation(.easeInOut(duration: 0.25), value: isTabBarHidden)
             }
         }
     }
