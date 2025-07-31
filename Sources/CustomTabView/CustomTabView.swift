@@ -46,10 +46,19 @@ public struct CustomTabView<SelectionValue: Hashable, TabBarView: View, Content:
     // Content
     let content: Content
     
-    public init(tabBarView: TabBarView, tabs: [SelectionValue], selection: SelectionValue, @ViewBuilder content: () -> Content) {
+    let isTabBarHidden: Bool
+    
+    public init(
+        tabBarView: TabBarView,
+        tabs: [SelectionValue],
+        selection: SelectionValue,
+        isTabBarHidden: Bool = false,
+        @ViewBuilder content: () -> Content
+    ) {
         self.tabBarView = tabBarView
         self.selection = selection
         self.content = content()
+        self.isTabBarHidden = isTabBarHidden
         
         var tabIndices: [SelectionValue: Int] = [:]
         for (index, tab) in tabs.enumerated() {
@@ -64,7 +73,8 @@ public struct CustomTabView<SelectionValue: Hashable, TabBarView: View, Content:
                 _LayoutView<TabBarView, SelectionValue>(
                     tabBarView: tabBarView,
                     selectedTabIndex: tabIndices[selection] ?? 0,
-                    children: subviews
+                    children: subviews,
+                    isTabBarHidden: isTabBarHidden
                 )
             }
         } else {
@@ -226,6 +236,7 @@ private struct _LayoutView<TabBarView: View, SelectionValue: Hashable>: View {
     let tabBarView: TabBarView
     let selectedTabIndex: Int
     let children: SubviewsCollection
+    let isTabBarHidden: Bool
 
     private func contentView(children: SubviewsCollection) -> some View {
         #if canImport(UIKit)
@@ -253,7 +264,9 @@ private struct _LayoutView<TabBarView: View, SelectionValue: Hashable>: View {
         VStack(spacing: 0) {
             contentView(children: children)
             
-            tabBarView
+            if !isTabBarHidden {
+                tabBarView
+            }
         }
     }
     
